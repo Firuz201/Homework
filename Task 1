@@ -1,0 +1,104 @@
+using System.Runtime.InteropServices;
+
+namespace ConsoleApp2
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+           
+        }
+
+        public class User
+        {
+            public int Id {get; set;}
+            public string Name { get; set; }
+            public string Email {get; set;}
+
+            public User(int id, string name, string email) 
+            { 
+                this.Id = id;
+                this.Name = name;
+                this.Email = email;
+            }
+        }
+
+        public class UserService 
+        {
+            private User[] users;
+
+            public UserService()
+            {
+                users = new User[]
+                {
+                    new User (45, "A", "X@gmail.com"),
+                    new User (576, "B", "O@gmail.com"),
+                    new User (91, "C", "I@gmail.com"),
+                    new User (112, "D", "W@gmail.com"),
+                    new User (5833, "E", "L@gmail.com")
+                };
+            }
+
+            public void Create(User user)
+            {
+                for (int i = 0; i < users.Length; i++)
+                {
+                    if (users[i].Id == user.Id)
+                    {
+                        Console.WriteLine("Error");
+                        return;
+                    }
+                }
+
+                User[] newUsers = new User[users.Length + 1];
+                for (int i = 0; i < users.Length; i++) 
+                {
+                    newUsers[i] = users[i];
+                }
+                newUsers[users.Length - 1] = user;
+                users = newUsers;
+            } 
+
+            public User GetById(int id)
+            {
+                for (int i = 0; i < users.Length; ++i)
+                {
+                    if (users[i].Id == id)
+                    {
+                        return users[i];
+                    }
+                }
+                return null;
+            }
+
+            public User[] GetAll()
+            {
+                return users;
+            }
+
+            public void Delete(int id)
+            {
+                int idfordel = -1;
+                for (int i = 0; i < users.Length; ++i)
+                {
+                    if (users[i].Id == id)
+                    {
+                        idfordel = i;
+                    }
+                }
+                User[] newUsers = new User[users.Length - 1];
+
+                int c = 0;
+                for (int j = 0; j < users.Length; j++)
+                {
+                    if (users[j].Id == idfordel)
+                    {
+                        continue;
+                    }
+                    newUsers[c++] = users[j];
+                }
+                users = newUsers;
+            }
+        }
+    }
+}
