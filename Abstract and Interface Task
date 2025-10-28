@@ -1,0 +1,69 @@
+using System.Globalization;
+
+namespace ConsoleApp28
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+
+        }
+    }
+
+    public abstract class Device
+    {
+        private string brand;
+        private string model;
+        public string Brand { set; get; }
+        public string Model { set; get; }
+       
+        public void DisplayInfo()
+        {
+            Console.WriteLine($"Device brand: {brand}; Device model: {model}");
+        }
+
+        public abstract void StartDevice();
+    }
+
+    interface IConnectable
+    {
+        void ConnectToWiFi();
+        void DisconnectWiFi();
+    }
+
+    public class SmartPhone : Device, IConnectable
+    {
+        public void ConnectToWiFi()
+        {
+            Console.WriteLine("Wi-Fi connected to SmartPhone");
+        }
+
+        public void DisconnectWiFi()
+        {
+            Console.WriteLine("Wi-Fi disconnected from SmartPhone");
+        }
+
+        public override void StartDevice()
+        {
+            Console.WriteLine("SmartPhone is started");
+        }
+    }
+
+    public class SmartWatch : Device, IConnectable
+    {
+        public void ConnectToWiFi()
+        {
+            Console.WriteLine("Wi-Fi connected to Smartwatch");
+        }
+
+        public void DisconnectWiFi()
+        {
+            Console.WriteLine("Wi-Fi disconnected from SmartWatch");
+        }
+
+        public override void StartDevice()
+        {
+            Console.WriteLine("Smartwatch is started");
+        }
+    }
+}
