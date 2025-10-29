@@ -1,0 +1,193 @@
+using System.Runtime.CompilerServices;
+
+namespace ConsoleApp30
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Dish dish1 = new Dish(1, "Pasta", 12.99, new Category(1, "Main Course", "Delicious main dishes"));
+            Dish dish2 = new Dish(2, "Caesar Salad", 8.99, new Category(2, "Appetizers", "Fresh and tasty starters"));
+            
+            Category categoryToFind = new Category(1, "Main Course");
+            Dish[] dishes = new Dish[] { dish1, dish2 };
+            dish1.FindDishesByCategory(categoryToFind, dishes);
+
+            Order order1 = new Order(1, new Dish[] { dish1, dish2 }, 2);
+            Restaurant restaurant = new Restaurant("Gourmet Bistro", "123 Food St", new Dish[] { dish1, dish2 }, new Order[] { order1 });
+            Order fetchedOrder = restaurant.GetOrderById(1);
+            if (fetchedOrder != null)
+            {
+                Console.WriteLine($"Order found with ID: {fetchedOrder.Id} containing {fetchedOrder.TotalAmount} items.");
+            }
+            else
+            {
+                Console.WriteLine("Order not found.");
+            }
+
+
+        }
+    }
+
+    public class Dish
+    {
+        int id;
+        public int Id { get { return id; } }
+
+        string name;
+        public string Name { get { return name; } }
+
+        double price;
+        public double Price { get { return price; } }
+
+        Category category;
+        public Category CAtegory { get { return category; } }
+
+        public Dish(int id, string name, double price, Category category)
+        {
+            this.id = id;
+            this.name = name;
+            this.price = price;
+            this.category = category;
+        }  
+        
+        public void FindDishesByCategory(Category category, Dish[] dishes )
+        {
+            for (int i = 0; i < dishes.Length; ++i)
+            {
+                if (dishes[i].category.Id == category.Id)
+                {
+                    Console.WriteLine($"There is such a dish! Info: \n Id: {dishes[i].id} \n Name: {dishes[i].Name} \n Price: {dishes[i].price}");
+                    return;
+                }
+            }
+            Console.WriteLine("No such dish found.");
+            return;
+        }
+    }
+
+    public class Category
+    {
+        int id;
+        public int Id { get { return id; } }
+
+        string name;
+        public string Name { get { return name; } }
+
+        string description;
+        public string Description { get { return description; } }
+
+        Dish[] dishes;
+        public Dish[] Dishes { get { return dishes; } }
+
+        public Category(int id, string name)
+        {
+            this.id = id;
+            this.name = name;
+        }
+
+        public Category(int id, string name, string description) : this(id, name)
+        {
+            this.description = description;
+        }
+    }
+
+    public class Order
+    {
+        int id;
+        public int Id { get { return id; } }
+
+        Dish[] dishes;
+        public Dish[] Dishes { get { return dishes; } }
+
+        int totalAmount;
+        public int TotalAmount { get { return totalAmount; } }
+
+        public Order(int id)
+        {
+            this.id = id;
+        }
+
+        public Order(int id, Dish[] dishes) : this(id)
+        {
+            this.dishes = dishes;
+        }
+
+        public Order(int id, Dish[] dishes, int totalAmount) : this(id, dishes)
+        {
+            this.totalAmount = totalAmount;
+        }
+
+    }
+
+    public class Restaurant
+    {
+        string name;
+        public string Name { get { return name; } }
+
+        string address;
+        public string Address { get { return address; } }
+
+        Dish[] menu;
+        public Dish[] Menu { get { return menu; } }
+
+        Order[] orders;
+        public Order[] Orders { get { return orders; } }
+
+
+        public Restaurant(string name)
+        {
+            this.name = name;
+        }
+
+        public Restaurant(string name, string address) : this(name)
+        {
+            this.address = address;
+        }
+
+        public Restaurant(string name, string address, Dish[] menu) : this(name, address)
+        {
+            this.menu = menu;
+        }
+
+        public Restaurant(string name, string address, Dish[] menu, Order[] orders) : this(name, address, menu)
+        {
+            this.orders = orders;
+        }
+
+        public void AddDishtoMenu(Dish dish)
+        {
+            Dish[] newMenu = new Dish[menu.Length + 1];
+            for (int i = 0; i < menu.Length; i++)
+            {
+                newMenu[i] = menu[i];
+            }
+            newMenu[menu.Length] = dish;
+            menu = newMenu;
+        }
+
+        public void PlaceOrder(Order order)
+        {
+            Order[] newOrders = new Order[orders.Length + 1];
+            for (int i = 0; i < orders.Length; i++)
+            {
+                newOrders[i] = orders[i];
+            }
+            newOrders[orders.Length] = order;
+            orders = newOrders;
+        }
+
+        public Order GetOrderById(int id)
+        {
+            for (int i = 0; i < orders.Length; ++i)
+            {
+                if (orders[i].Id == id)
+                {
+                    return orders[i];
+                }
+            }
+            return null;
+        }
+    }
+
+}
