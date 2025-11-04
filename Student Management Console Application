@@ -1,0 +1,191 @@
+using System.Security.Cryptography.X509Certificates;
+
+namespace Student_Management_Console_Application
+{
+    internal class Program
+    {
+        Student[] students = new Student[0]; //Creating empty array for students
+        static void Main(string[] args)
+        {
+            Program app = new Program();
+            Console.WriteLine("Welcome!");
+            bool UsersWill = true;
+            while (UsersWill)
+            {
+                Console.WriteLine("\nOperations list: \n1) Add new student \n2) Remove student \n3) Add new grade for student \n4) Show all students \n5) Exit");
+                Console.WriteLine($"\nChoose one: ");
+                int choice = Convert.ToInt32(Console.ReadLine());
+                if (choice == 1)
+                {
+                    Console.WriteLine("Enter name: ");
+                    string name = Console.ReadLine();
+                    Console.WriteLine("Enter surname: ");
+                    string surname = Console.ReadLine();
+
+                    Student newStudent = new Student(name, surname);
+                    app.AddNewStudent(newStudent);
+                }
+                else if (choice == 2)
+                {
+                    Console.WriteLine("Enter ID of the student you want to delete");
+                    int id = Convert.ToInt32(Console.ReadLine());
+                    app.RemoveStudent(id);
+                }
+                else if (choice == 3)
+                {
+                    Console.Write("Enter student ID: ");
+                    int id = Convert.ToInt32(Console.ReadLine());
+
+                    Console.Write("Enter new grade: ");
+                    int grade = Convert.ToInt32(Console.ReadLine());
+
+                    app.GradeForStudent(id, grade);
+                }
+
+                else if (choice == 4)
+                {
+                    app.ShowAllStudents();
+                }
+                else if (choice == 5)
+                {
+                    Console.WriteLine("Goodbye!");
+                    UsersWill = false;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid choice, try again!");
+                }
+            }
+
+            
+
+            
+        }
+
+        public void AddNewStudent(Student newStudent) // Method for adding new student
+        {
+            Student[] newStudents = new Student[students.Length + 1]; //Creating array bigger than previous on 1
+            for (int i = 0; i < students.Length; i++) // putting old array members into new one
+            {
+                newStudents[i] = students[i];
+            }
+            newStudents[students.Length] = newStudent; // adding new member to array
+            students = newStudents; //changing array
+        }
+
+        public void RemoveStudent(int id) //Student deleting
+        {
+            int indfordel = -1;
+            bool found = false;
+            for (int i = 0; i < students.Length; ++i) // Searching for student thta shoud be deleted
+            {
+                if (students[i].GetID() == id)
+                {
+                    indfordel = i;
+                    found = true;
+                }
+                
+            }
+
+            if(found)
+            {
+                Student[] newStudents = new Student[students.Length - 1]; // Creating array smaller on 1 than previous
+
+                int c = 0;
+                for (int j = 0; j < students.Length; j++)
+                {
+                    if (j == indfordel)
+                    {
+                        continue;
+                    }
+                    newStudents[c++] = students[j];
+                }
+                students = newStudents;
+            }
+            else
+            {
+                Console.WriteLine("There is no student with such ID!");
+            }
+            
+        }
+
+        public void GradeForStudent(int id, int grade) //Adding new grade
+        {
+            bool found = false;
+
+            for (int i = 0; i < students.Length; ++i)
+            {
+                if (students[i].GetID() == id)
+                {
+                    students[i].AddNewGrade(grade);
+                    found = true;
+                }
+            }
+            if (!found)
+            {
+                Console.WriteLine("There is no student with such ID!");
+            }
+        }
+
+        public void ShowAllStudents()
+        {
+            for (int i = 0; i < students.Length; i++)
+            {
+                students[i].ShowInfo();
+            }
+        }
+    }
+
+    public class Student
+    {
+        // Student's fields
+        static private int Amount = 0;
+        private int Id;
+        private string Name;
+        private string Surname;
+        private int[] Grades;
+
+        public Student(string name, string surname) //Constructor
+        {
+            Id = Amount;
+            Amount++;
+            Name = name;
+            Surname = surname;
+            Grades = new int[0];
+
+        }
+
+        public int GetID() // Method for getting ID
+        { 
+            return Id; 
+        }
+
+        public void ShowInfo() //Shows certain student's info
+        {
+            Console.WriteLine($"Student's ID: {Id} \nStudent's name: {Name} \nStudent's surname: {Surname} \nStudent's average grade: {GetAverage()}" );
+        }
+
+        public double GetAverage() // Counts and returns average grade
+        {
+            int GradeSum = 0;
+            for (int i = 0; i < Grades.Length; i++)
+            {
+                GradeSum += Grades[i];
+            }
+
+            int AvrGrd = GradeSum / Grades.Length;
+            return AvrGrd;
+        }
+
+        public void AddNewGrade(int newGrade) // Adding new grade to certain student
+        {
+            int[] NewGrades = new int[Grades.Length + 1];
+            for (int i = 0; i < Grades.Length; i++)
+            {
+                NewGrades[i] = Grades[i];
+            }
+            NewGrades[NewGrades.Length - 1] = newGrade;
+            Grades = NewGrades;
+        }
+    }
+}
