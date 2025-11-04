@@ -1,5 +1,3 @@
-using System.Security.Cryptography.X509Certificates;
-
 namespace Student_Management_Console_Application
 {
     internal class Program
@@ -57,9 +55,9 @@ namespace Student_Management_Console_Application
                 }
             }
 
-            
 
-            
+
+
         }
 
         public void AddNewStudent(Student newStudent) // Method for adding new student
@@ -84,10 +82,10 @@ namespace Student_Management_Console_Application
                     indfordel = i;
                     found = true;
                 }
-                
+
             }
 
-            if(found)
+            if (found)
             {
                 Student[] newStudents = new Student[students.Length - 1]; // Creating array smaller on 1 than previous
 
@@ -106,7 +104,7 @@ namespace Student_Management_Console_Application
             {
                 Console.WriteLine("There is no student with such ID!");
             }
-            
+
         }
 
         public void GradeForStudent(int id, int grade) //Adding new grade
@@ -156,18 +154,22 @@ namespace Student_Management_Console_Application
         }
 
         public int GetID() // Method for getting ID
-        { 
-            return Id; 
+        {
+            return Id;
         }
 
         public void ShowInfo() //Shows certain student's info
         {
-            Console.WriteLine($"Student's ID: {Id} \nStudent's name: {Name} \nStudent's surname: {Surname} \nStudent's average grade: {GetAverage()}" );
+            Console.WriteLine($"Student's ID: {Id} \nStudent's name: {Name} \nStudent's surname: {Surname} \nStudent's average grade: {GetAverage()}");
         }
 
         public double GetAverage() // Counts and returns average grade
         {
             int GradeSum = 0;
+            if(Grades.Length == 0)
+            {
+                return 0;
+            }
             for (int i = 0; i < Grades.Length; i++)
             {
                 GradeSum += Grades[i];
