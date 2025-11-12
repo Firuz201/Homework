@@ -1,0 +1,187 @@
+using System.Globalization;
+using System.Reflection.Metadata.Ecma335;
+
+namespace _10Tasks
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            //int[] a = {-2, 5, 0, 7 };
+            //Console.WriteLine(SumOfPositivies(a));
+
+            //List <int> a = new List<int> () { 2, 2, 3, 2, 4, 3 };
+            //List<int> b = new List<int>();
+            //b = UniquePreserveOrder(a);
+            //foreach (int i in b)
+            //{
+            //    Console.WriteLine (i);
+            //}
+
+            //List<string> people = new List<string>() { "Ali;25", "X;abc", "Nigar;30" };
+            //ParsePeople(people);
+            
+
+            
+        }
+
+        public static int SumOfPositivies(int[] nums)
+        {
+            int sum = 0;
+            if (nums != null)
+            {
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    if (nums[i] > 0)
+                    {
+                        sum += nums[i];
+                    }
+                }
+            }
+            
+            return sum;
+        }
+
+        public static List <int> UniquePreserveOrder(List <int> numbers)
+        {
+            List <int> Result = new List <int>();
+            for (int i = 0;i < numbers.Count;i++)
+            {
+                if (!Result.Contains(numbers[i]))
+                {
+                    Result.Add(numbers[i]);
+                }
+            }
+            return Result;
+        }
+
+        public static List<Person> ParsePeople (List<string> lines)
+        {
+            List<Person> Result = new List<Person>();
+            for(int i = 0; i < lines.Count; i++)
+            {
+                string info = lines[i];
+                int j = 0;
+                string name = null;
+                int age = 0;
+                bool Ok = true;
+                while (info[j] != ';')
+                {
+                    
+                    if (Char.IsDigit(info[j]))
+                    {
+                        Ok = false;
+                        break;
+                    }
+                    name += info[j];
+                    j++;
+                }
+
+                if (Ok)
+                {
+                    j++;
+                    for (; j < info.Length; j++)
+                    {
+                        if (!Char.IsDigit(info[j]))
+                        {
+                            Ok = false;
+                            break;
+                        }
+                        age += Convert.ToInt32(info[j]);
+                    }
+
+                    if (age < 0 || age > 150)
+                    {
+                        Ok = false;
+                    }
+                }
+
+                if (Ok)
+                {
+                    Person newPer = new Person(name, age);
+                    Result.Add(newPer);
+                    Console.WriteLine("Person added");
+                }
+                
+
+
+            }
+
+            return Result;
+        }
+
+        public List <(string word, int count)> WordFrequency(string text)
+        {
+            List<(string word, int count)> Result = new List<(string word, int count)>();
+            char[] delimiterChars = [' ', ',', '.', ':', '\t'];
+            string loweredText = text.ToLower();
+            string[] nak1 = text.Split(loweredText);
+
+            List<string> nak = new List<string>();
+            //int j = 0;
+            for (int i = 0; i < nak1.Length; i++)
+            {
+                nak[i] = nak1[i];
+            }
+            int count;
+            string name;
+            while (nak.Count > 0)
+            {
+                name = nak[0];
+                count = nak.RemoveAll(x => x == nak[0]);
+                Result.Add((name, count)); 
+            }
+            return Result;
+
+        }
+
+        public List<Student> FilterByAverage(List<Student> students, double threshold)
+        {
+            List<Student> Result = new List<Student>();
+
+            double[] avrgs = new double[students.Count];
+            double avrg;
+            List <int> fittingStuds = new List<int>();
+            for (int i = 0; i < students.Count; i++)
+            {
+                avrg = 0;
+                for (int j = 0; j < students[i].Grades.Count; j++)
+                {
+                    avrg += students[i].Grades[j];
+                }
+                avrgs[i] = avrg;
+                if (avrg >= threshold)
+                {
+                    fittingStuds.Add(i);
+                }
+            }
+
+            for (int i = 0; i < fittingStuds.Count; i++)
+            {
+                Result.Add(students[fittingStuds[i]]);
+            }
+            //Result = students.FindAll(x => x.)
+            return Result;
+        }
+    }
+
+    public class Person
+    {
+        public string Name;
+        public int Age;
+
+        public Person(string name, int age)
+        {
+            Name = name;
+            Age = age;
+        }
+    }
+
+    class Student 
+    { 
+        public string Name; 
+        public List<int> Grades; 
+    }
+
+
+}
