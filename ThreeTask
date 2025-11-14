@@ -1,0 +1,209 @@
+using System;
+using System.Reflection.Metadata.Ecma335;
+using System.Security.Cryptography.X509Certificates;
+
+namespace ConsoleApp10
+{
+    internal class Program
+    {
+
+        //Task 3
+        public delegate bool ProductFilter(Product product);
+        public static List<Product> FilterProducts(List<Product> products, ProductFilter filter)
+        {
+            List<Product> result = new List<Product>();
+
+            foreach (Product product in products)
+            {
+                if (filter(product))
+                {
+                    result.Add(product);
+                }
+            }
+            return result;
+        }
+
+
+        static void Main(string[] args)
+        {
+            //CashPayment wallet = new CashPayment(8, 5000);
+            //CardPayment myCard = new CardPayment(1, 100);
+            //wallet.Pay(6.75);
+            //wallet.Pay(2);
+            //wallet.Pay(3.15);
+            //wallet.GetPaymentInfo();
+
+            //myCard.Pay(45);
+            //myCard.GetPaymentInfo();
+
+
+
+
+
+            //IRepository<Student> student = new InMemoryRepository<Student>();
+            //student.Add(new Student { Id = 1, Name = "A" });
+            //student.Add(new Student { Id = 2, Name = "B" });
+
+            //var students = student.GetAll();
+            //foreach (var i in students)
+            //{
+            //    Console.WriteLine(i);
+            //}
+
+
+
+            List<Product> products = new List<Product>();
+            {
+                new Product { Name = "Laptop", Price = 1500, Category = "Electronics" };
+              
+            }
+
+        }
+    }
+   
+
+
+
+    //________________________________________________________________ TASK 1 _________________________________________________________________________________
+    interface IPayment
+    {
+        public void Pay(double amount);
+        public void GetPaymentInfo();
+
+    }
+
+    public class CardPayment : IPayment
+    {
+        public int CardID;
+        public double CardBalance;
+        public List <double> Payments = new List<double> { };
+        private double Spend = 0;
+
+        public CardPayment(int id, double balance)
+        {
+            CardID = id;
+            CardBalance = balance;
+        }
+        public void Pay(double amount)
+        {
+            if (CardBalance >= amount)
+            {
+                CardBalance -= amount;
+                Spend += amount;
+                Payments.Add(amount);
+                Console.WriteLine("Card payment went on succesfully");
+            }
+            else
+            {
+                Console.WriteLine("You don't have enough money");
+            }
+
+        }
+
+        public void GetPaymentInfo()
+        {
+            for (int i = 0; i < Payments.Count; i++)
+            {
+                Console.WriteLine("Number of payment: " +  i + " Bill: " + Payments[i]);
+            }
+            Console.WriteLine("Overall money from Card " + CardID + "spend: " + Spend);
+        }
+
+    }
+
+
+    public class CashPayment : IPayment
+    {
+        public int ID;
+        public double Balance;
+        public List<double> Payments = new List<double> { };
+        private double Spend = 0;
+
+
+        public CashPayment(int id, double balance)
+        {
+            ID = id;
+            Balance = balance;
+        }
+        public void Pay(double amount)
+        {
+            if (Balance >= amount)
+            {
+                Balance -= amount;
+                Spend += amount;
+                Payments.Add(amount);
+                Console.WriteLine("Cash payment went on succesfully");
+            }
+            else
+            {
+                Console.WriteLine("You don't have enough money");
+            }
+
+        }
+
+        public void GetPaymentInfo()
+        {
+            for (int i = 0; i < Payments.Count; i++)
+            {
+                Console.WriteLine("Number of payment: " + i + " Bill: " + Payments[i]);
+            }
+            Console.WriteLine("Overall cash money spend: " + Spend);
+
+        }
+    }
+
+
+
+
+
+    //________________________________________________________________ TASK 2 _________________________________________________________________________________
+    public interface IRepository<T>
+    {
+        public void Add(T item);
+        public void Remove(T item);
+        List <T> GetAll();
+    }
+
+    public class InMemoryRepository<T> : IRepository<T>
+    {
+        public List<T> list = new List<T>();
+
+        public void Add(T item)
+        {
+            list.Add(item);
+        }
+
+        public void Remove(T item)
+        {
+            list.Remove(item);
+        }
+
+        public List<T> GetAll()
+        {
+            return new List<T>(list);
+        }
+    }
+
+    public class Student
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public override string ToString()
+        {
+            return $"Id: {Id}, Name: {Name}";
+        }
+    }
+
+
+
+
+    //________________________________________________________________ TASK 3 _________________________________________________________________________________
+
+
+    public class Product
+    {
+        public string Name { get; set; }
+        public string Category { get; set; }
+        public int Price { get; set; }
+    }
+}
