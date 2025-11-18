@@ -1,15 +1,23 @@
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.IO;
 using System.Runtime.CompilerServices;
 
 namespace ConsoleApp16
 {
-
     internal class Program
     {
         //static public List <Person> userslist;
         //static public List <Post> postslist;
-        
+
         static void Main(string[] args)
         {
+
+            //Console.WriteLine(Directory.GetCurrentDirectory());
+            //DirectoryInfo directoryInfo = new DirectoryInfo(Directory.GetCurrentDirectory());
+            //string pathInfo = $"{directoryInfo.Parent.Parent.Parent}/index.json";
+            //File.Create(pathInfo);
+
             Console.WriteLine("Welcome to the Main Menu!");
             Console.WriteLine("Choose an option: \n");
             Console.WriteLine("1) Users");
@@ -20,57 +28,58 @@ namespace ConsoleApp16
             Console.Write("Enter a numbere of option: ");
             string choice = Console.ReadLine();
 
+
             //switch (choice)
             //{
             //    case "1":
-                    //Console.Clear();
-                    //Console.WriteLine("Welcome to the Users Menu!");
-                    //Console.WriteLine("Choose an option: \n");
-                    //Console.WriteLine("1) Create new user");
-                    //Console.WriteLine("2) Delete user");
-                    //Console.WriteLine("3) Show User's posts");
-                    //Console.Write("Enter a numbere of option: ");
-                    //string Uchoice = Console.ReadLine();
-                    //switch (Uchoice)
-                    //{
-                    //    case "1":
-                    //        Console.Clear();
-                    //        Console.Write("Enter new user's name: ");
-                    //        string name = Console.ReadLine();
-                    //        Console.Write("Enter new user's username: ");
-                    //        string username = Console.ReadLine();
-                    //        Console.Write("Enter new user's email: ");
-                    //        string email = Console.ReadLine();
-                    //        Console.Write("Enter new user's phone number: ");
-                    //        string phonenumber = Console.ReadLine();
-                    //        Console.Write("Enter new user's website: ");
-                    //        string website = Console.ReadLine();
-                    //        Person newPerson = new Person(name, username, email, phonenumber, website);
-                    //        userslist.Add(newPerson);
-                    //        Console.WriteLine("User sucessfuly added!");
-                    //        break;
-                    //}
+            //Console.Clear();
+            //Console.WriteLine("Welcome to the Users Menu!");
+            //Console.WriteLine("Choose an option: \n");
+            //Console.WriteLine("1) Create new user");
+            //Console.WriteLine("2) Delete user");
+            //Console.WriteLine("3) Show User's posts");
+            //Console.Write("Enter a numbere of option: ");
+            //string Uchoice = Console.ReadLine();
+            //switch (Uchoice)
+            //{
+            //    case "1":
+            //        Console.Clear();
+            //        Console.Write("Enter new user's name: ");
+            //        string name = Console.ReadLine();
+            //        Console.Write("Enter new user's username: ");
+            //        string username = Console.ReadLine();
+            //        Console.Write("Enter new user's email: ");
+            //        string email = Console.ReadLine();
+            //        Console.Write("Enter new user's phone number: ");
+            //        string phonenumber = Console.ReadLine();
+            //        Console.Write("Enter new user's website: ");
+            //        string website = Console.ReadLine();
+            //        Person newPerson = new Person(name, username, email, phonenumber, website);
+            //        userslist.Add(newPerson);
+            //        Console.WriteLine("User sucessfuly added!");
+            //        break;
+            //}
 
 
 
-                    //case "4":
-                    //    Console.Clear();
-                    //    Console.Write("Enter post user's ID: ");
-                    //    int userid = Convert.ToInt32(Console.ReadLine());
-                    //    Console.Write("Enter new post title: ");
-                    //    string title = Console.ReadLine();
-                    //    Console.Write("Enter new post body: ");
-                    //    string body = Console.ReadLine();
-                    //    Post newPost = new Post(userid, title, body);
-                    //    postslist.Add(newPost);
-                    //    break;
+            //case "4":
+            //    Console.Clear();
+            //    Console.Write("Enter post user's ID: ");
+            //    int userid = Convert.ToInt32(Console.ReadLine());
+            //    Console.Write("Enter new post title: ");
+            //    string title = Console.ReadLine();
+            //    Console.Write("Enter new post body: ");
+            //    string body = Console.ReadLine();
+            //    Post newPost = new Post(userid, title, body);
+            //    postslist.Add(newPost);
+            //    break;
             //}
         }
     }
 
     public class Person
     {
-        static public List<Person> userslist;
+        static public List<Person> userslist = new List<Person>();
 
         static private int UsersAmount = 0;
         private int Id;
@@ -124,6 +133,7 @@ namespace ConsoleApp16
                     string website = Console.ReadLine();
                     Person newPerson = new Person(name, username, email, phonenumber, website);
                     userslist.Add(newPerson);
+                    UWriteDown();
                     Console.WriteLine("User sucessfuly added!");
                     break;
                 case "2":
@@ -135,14 +145,45 @@ namespace ConsoleApp16
                         if (userslist[i].GetId() == IdOfDeleatingUser)
                         {
                             userslist[i].IsDeleted = true;
-                            UsersAmount--;
                             break;
                         }
                     }
                     break;
+                case "4":
+                    Console.Clear();
+                    UReadList();
+                    break;
+
 
             }
         }
+
+        static public void UWriteDown()
+        {
+            string path = Path.Combine("C:", "Users", "OnOff-09092023", "source", "repos", "ConsoleApp4", "ConsoleApp4", "index.json");
+            using (StreamWriter sw = new StreamWriter(path))
+            {
+                sw.WriteLine(JsonConvert.SerializeObject(userslist, Formatting.Indented));
+            }
+        }
+
+        static public void UReadList()
+        {
+            string path = Path.Combine("C:", "Users", "OnOff-09092023", "source", "repos", "ConsoleApp4", "ConsoleApp4", "index.json");
+            using (StreamReader sr = new StreamReader(path))
+            {
+                List<Person> list1 = JsonConvert.DeserializeObject<List<Person>>(sr.ReadToEnd());
+                foreach (var i in list1)
+                {
+                    if (i.IsDeleted)
+                    {
+                        Console.WriteLine($"User's name: {i.Name} \nUser's username: {i.Username} \nUser's email: {i.Email} \nUser's phone number: {i.PhoneNumber} \nUser's website: {i.Website}");
+                    }
+                    
+                }
+            }
+        }
+       
     }
 
     public class Post
@@ -152,7 +193,7 @@ namespace ConsoleApp16
         public int UserId;
         public string Title;
         public string Body;
-        public Post (int userid, string title, string body)
+        public Post(int userid, string title, string body)
         {
             Id = PostsAmount;
             PostsAmount++;
