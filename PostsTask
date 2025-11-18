@@ -1,0 +1,183 @@
+using System.Runtime.CompilerServices;
+
+namespace ConsoleApp16
+{
+
+    internal class Program
+    {
+        //static public List <Person> userslist;
+        //static public List <Post> postslist;
+        
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Welcome to the Main Menu!");
+            Console.WriteLine("Choose an option: \n");
+            Console.WriteLine("1) Users");
+            Console.WriteLine("2) Posts");
+            //Console.WriteLine("3) Create User");
+            //Console.WriteLine("4) Create Post");
+            //Console.WriteLine("5) Show User's posts");
+            Console.Write("Enter a numbere of option: ");
+            string choice = Console.ReadLine();
+
+            //switch (choice)
+            //{
+            //    case "1":
+                    //Console.Clear();
+                    //Console.WriteLine("Welcome to the Users Menu!");
+                    //Console.WriteLine("Choose an option: \n");
+                    //Console.WriteLine("1) Create new user");
+                    //Console.WriteLine("2) Delete user");
+                    //Console.WriteLine("3) Show User's posts");
+                    //Console.Write("Enter a numbere of option: ");
+                    //string Uchoice = Console.ReadLine();
+                    //switch (Uchoice)
+                    //{
+                    //    case "1":
+                    //        Console.Clear();
+                    //        Console.Write("Enter new user's name: ");
+                    //        string name = Console.ReadLine();
+                    //        Console.Write("Enter new user's username: ");
+                    //        string username = Console.ReadLine();
+                    //        Console.Write("Enter new user's email: ");
+                    //        string email = Console.ReadLine();
+                    //        Console.Write("Enter new user's phone number: ");
+                    //        string phonenumber = Console.ReadLine();
+                    //        Console.Write("Enter new user's website: ");
+                    //        string website = Console.ReadLine();
+                    //        Person newPerson = new Person(name, username, email, phonenumber, website);
+                    //        userslist.Add(newPerson);
+                    //        Console.WriteLine("User sucessfuly added!");
+                    //        break;
+                    //}
+
+
+
+                    //case "4":
+                    //    Console.Clear();
+                    //    Console.Write("Enter post user's ID: ");
+                    //    int userid = Convert.ToInt32(Console.ReadLine());
+                    //    Console.Write("Enter new post title: ");
+                    //    string title = Console.ReadLine();
+                    //    Console.Write("Enter new post body: ");
+                    //    string body = Console.ReadLine();
+                    //    Post newPost = new Post(userid, title, body);
+                    //    postslist.Add(newPost);
+                    //    break;
+            //}
+        }
+    }
+
+    public class Person
+    {
+        static public List<Person> userslist;
+
+        static private int UsersAmount = 0;
+        private int Id;
+        public string Name;
+        public string Username;
+        public string Email;
+        public string PhoneNumber;
+        public string Website;
+        private bool IsDeleted;
+        public Person(string name, string username, string email, string phonenumber, string website)
+        {
+            Id = UsersAmount;
+            UsersAmount++;
+            Name = name;
+            Username = username;
+            Email = email;
+            PhoneNumber = phonenumber;
+            Website = website;
+            IsDeleted = false;
+        }
+
+        public int GetId()
+        {
+            return Id;
+        }
+
+        static public void UsersMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("Welcome to the Users Menu!");
+            Console.WriteLine("Choose an option: \n");
+            Console.WriteLine("1) Create new user");
+            Console.WriteLine("2) Delete user");
+            Console.WriteLine("3) Show user's posts");
+            Console.WriteLine("4) Show users list");
+            Console.Write("Enter a number of option: ");
+            string Uchoice = Console.ReadLine();
+            switch (Uchoice)
+            {
+                case "1":
+                    Console.Clear();
+                    Console.Write("Enter new user's name: ");
+                    string name = Console.ReadLine();
+                    Console.Write("Enter new user's username: ");
+                    string username = Console.ReadLine();
+                    Console.Write("Enter new user's email: ");
+                    string email = Console.ReadLine();
+                    Console.Write("Enter new user's phone number: ");
+                    string phonenumber = Console.ReadLine();
+                    Console.Write("Enter new user's website: ");
+                    string website = Console.ReadLine();
+                    Person newPerson = new Person(name, username, email, phonenumber, website);
+                    userslist.Add(newPerson);
+                    Console.WriteLine("User sucessfuly added!");
+                    break;
+                case "2":
+                    Console.Clear();
+                    Console.Write("Enter ID of the user you want to delete: ");
+                    int IdOfDeleatingUser = Convert.ToInt32(Console.ReadLine());
+                    for (int i = 0; i < userslist.Count; i++)
+                    {
+                        if (userslist[i].GetId() == IdOfDeleatingUser)
+                        {
+                            userslist[i].IsDeleted = true;
+                            UsersAmount--;
+                            break;
+                        }
+                    }
+                    break;
+
+            }
+        }
+    }
+
+    public class Post
+    {
+        static private int PostsAmount = 0;
+        private int Id;
+        public int UserId;
+        public string Title;
+        public string Body;
+        public Post (int userid, string title, string body)
+        {
+            Id = PostsAmount;
+            PostsAmount++;
+            UserId = userid;
+            Title = title;
+            Body = body;
+        }
+
+        public int GetId()
+        {
+            return Id;
+        }
+
+        static public void PostMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("Welcome to the Post Menu!");
+            Console.WriteLine("Choose an option: \n");
+            Console.WriteLine("1) Create new post");
+            Console.WriteLine("2) Delete post");
+            Console.WriteLine("3) Read post");
+            Console.WriteLine("4) Update post");
+            Console.WriteLine("5) Delete post");
+            Console.Write("Enter a numbere of option: ");
+            string Uchoice = Console.ReadLine();
+        }
+    }
+}
