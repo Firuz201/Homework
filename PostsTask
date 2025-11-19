@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -9,86 +10,59 @@ namespace ConsoleApp16
     {
         //static public List <Person> userslist;
         //static public List <Post> postslist;
-
-        static void Main(string[] args)
+        static public void MainMenu()
         {
-
-            //Console.WriteLine(Directory.GetCurrentDirectory());
-            //DirectoryInfo directoryInfo = new DirectoryInfo(Directory.GetCurrentDirectory());
-            //string pathInfo = $"{directoryInfo.Parent.Parent.Parent}/index.json";
-            //File.Create(pathInfo);
-
+            TryAgain:
+            Console.Clear();
             Console.WriteLine("Welcome to the Main Menu!");
             Console.WriteLine("Choose an option: \n");
             Console.WriteLine("1) Users");
             Console.WriteLine("2) Posts");
-            //Console.WriteLine("3) Create User");
-            //Console.WriteLine("4) Create Post");
-            //Console.WriteLine("5) Show User's posts");
             Console.Write("Enter a numbere of option: ");
             string choice = Console.ReadLine();
 
+            switch (choice)
+            {
+                case "1":
+                    Person.UsersMenu();
+                    break;
+                case "2":
+                    Post.PostMenu();
+                    break;
+                default:
+                    Console.WriteLine("Incorrect input! Please try again");
+                    goto TryAgain;
 
-            //switch (choice)
-            //{
-            //    case "1":
-            //Console.Clear();
-            //Console.WriteLine("Welcome to the Users Menu!");
-            //Console.WriteLine("Choose an option: \n");
-            //Console.WriteLine("1) Create new user");
-            //Console.WriteLine("2) Delete user");
-            //Console.WriteLine("3) Show User's posts");
-            //Console.Write("Enter a numbere of option: ");
-            //string Uchoice = Console.ReadLine();
-            //switch (Uchoice)
-            //{
-            //    case "1":
-            //        Console.Clear();
-            //        Console.Write("Enter new user's name: ");
-            //        string name = Console.ReadLine();
-            //        Console.Write("Enter new user's username: ");
-            //        string username = Console.ReadLine();
-            //        Console.Write("Enter new user's email: ");
-            //        string email = Console.ReadLine();
-            //        Console.Write("Enter new user's phone number: ");
-            //        string phonenumber = Console.ReadLine();
-            //        Console.Write("Enter new user's website: ");
-            //        string website = Console.ReadLine();
-            //        Person newPerson = new Person(name, username, email, phonenumber, website);
-            //        userslist.Add(newPerson);
-            //        Console.WriteLine("User sucessfuly added!");
-            //        break;
-            //}
+            }
+        }
+        static void Main(string[] args)
+        {
+            MainMenu();
+            //Person.UReadList();
 
-
-
-            //case "4":
-            //    Console.Clear();
-            //    Console.Write("Enter post user's ID: ");
-            //    int userid = Convert.ToInt32(Console.ReadLine());
-            //    Console.Write("Enter new post title: ");
-            //    string title = Console.ReadLine();
-            //    Console.Write("Enter new post body: ");
-            //    string body = Console.ReadLine();
-            //    Post newPost = new Post(userid, title, body);
-            //    postslist.Add(newPost);
-            //    break;
-            //}
+            //Console.WriteLine(Directory.GetCurrentDirectory());
+            //DirectoryInfo directoryInfo = new DirectoryInfo(Directory.GetCurrentDirectory());
+            //string pathInfo = $"{directoryInfo.Parent.Parent.Parent}/posts.json";
+            //File.Create(pathInfo);
+            
         }
     }
 
     public class Person
     {
         static public List<Person> userslist = new List<Person>();
+        static public List<int> ActiveIDs = new List<int>();
 
-        static private int UsersAmount = 0;
+        static private int UsersAmount = 1;
         private int Id;
         public string Name;
         public string Username;
         public string Email;
         public string PhoneNumber;
         public string Website;
-        private bool IsDeleted;
+        public bool IsDeleted;
+
+        public List<int> IDs = new List<int>();
         public Person(string name, string username, string email, string phonenumber, string website)
         {
             Id = UsersAmount;
@@ -108,13 +82,14 @@ namespace ConsoleApp16
 
         static public void UsersMenu()
         {
+AnotherTry:
             Console.Clear();
             Console.WriteLine("Welcome to the Users Menu!");
             Console.WriteLine("Choose an option: \n");
             Console.WriteLine("1) Create new user");
             Console.WriteLine("2) Delete user");
-            Console.WriteLine("3) Show user's posts");
-            Console.WriteLine("4) Show users list");
+            Console.WriteLine("3) Show users list");
+            Console.WriteLine("4) Exit");
             Console.Write("Enter a number of option: ");
             string Uchoice = Console.ReadLine();
             switch (Uchoice)
@@ -137,30 +112,55 @@ namespace ConsoleApp16
                     Console.WriteLine("User sucessfuly added!");
                     break;
                 case "2":
+wr:
                     Console.Clear();
-                    Console.Write("Enter ID of the user you want to delete: ");
-                    int IdOfDeleatingUser = Convert.ToInt32(Console.ReadLine());
-                    for (int i = 0; i < userslist.Count; i++)
+ag:
+                    Console.Write("Enter ID of the user you want to delete or write '0' if you want to exit: ");
+                    try
                     {
-                        if (userslist[i].GetId() == IdOfDeleatingUser)
+
+                        int IdOfDeleatingUser = Convert.ToInt32(Console.ReadLine());
+                        if (IdOfDeleatingUser == 0)
                         {
-                            userslist[i].IsDeleted = true;
-                            break;
+                            UsersMenu();
                         }
+                        for (int i = 0; i < userslist.Count; i++)
+                        {
+                            if (userslist[i].GetId() == IdOfDeleatingUser)
+                            {
+                                userslist[i].IsDeleted = true;
+                                UWriteDown();
+                                Console.WriteLine("User deleted sucesfully");
+                                goto ag;
+
+                            }
+                        }
+                        Console.WriteLine("There is no user with such ID");
+                        goto ag;
                     }
-                    break;
-                case "4":
+
+                    catch
+                    {
+                        goto wr;
+                    }
+
+                case "3":
                     Console.Clear();
                     UReadList();
                     break;
-
-
+                case "4":
+                    Program.MainMenu();
+                    break;
+                default:
+                    goto AnotherTry;
             }
         }
 
         static public void UWriteDown()
         {
             string path = Path.Combine("C:", "Users", "OnOff-09092023", "source", "repos", "ConsoleApp4", "ConsoleApp4", "index.json");
+            //Environment.CurrentDirectory
+            //string path = Path.Combine(Environment.CurrentDirectory, "index.json");
             using (StreamWriter sw = new StreamWriter(path))
             {
                 sw.WriteLine(JsonConvert.SerializeObject(userslist, Formatting.Indented));
@@ -173,26 +173,53 @@ namespace ConsoleApp16
             using (StreamReader sr = new StreamReader(path))
             {
                 List<Person> list1 = JsonConvert.DeserializeObject<List<Person>>(sr.ReadToEnd());
+                userslist = list1;
                 foreach (var i in list1)
                 {
-                    if (i.IsDeleted)
+                    if (!i.IsDeleted)
                     {
-                        Console.WriteLine($"User's name: {i.Name} \nUser's username: {i.Username} \nUser's email: {i.Email} \nUser's phone number: {i.PhoneNumber} \nUser's website: {i.Website}");
+                        Console.WriteLine($"User's ID: {i.GetId()} \nUser's name: {i.Name} \nUser's username: {i.Username} \nUser's email: {i.Email} \nUser's phone number: {i.PhoneNumber} \nUser's website: {i.Website}");
                     }
-                    
+
                 }
             }
-        }
-       
-    }
+            UsersAmount = userslist.Max(u => u.GetId()) + 1;
 
+
+        }
+
+        static public void CheckActivity()
+        {
+            string path = Path.Combine("C:", "Users", "OnOff-09092023", "source", "repos", "ConsoleApp4", "ConsoleApp4", "index.json");
+            using (StreamReader sr = new StreamReader(path))
+            {
+                List<Person> list1 = JsonConvert.DeserializeObject<List<Person>>(sr.ReadToEnd());
+                userslist = list1;
+                ActiveIDs.Clear();
+                foreach (var i in list1)
+                {
+                    if (!i.IsDeleted)
+                    {
+                        ActiveIDs.Add(i.GetId());
+                    }
+
+                }
+            }
+
+
+        }
+    }
     public class Post
     {
-        static private int PostsAmount = 0;
+        static public List<Post> postslist = new List<Post>();
+        //static public List<Post> activePostsList = new List<Post>();
+        static private int PostsAmount = 1;
         private int Id;
         public int UserId;
         public string Title;
         public string Body;
+        public bool IsDeleted;
+
         public Post(int userid, string title, string body)
         {
             Id = PostsAmount;
@@ -200,6 +227,7 @@ namespace ConsoleApp16
             UserId = userid;
             Title = title;
             Body = body;
+            IsDeleted = false;
         }
 
         public int GetId()
@@ -207,18 +235,168 @@ namespace ConsoleApp16
             return Id;
         }
 
+        static public void PWriteDown()
+        {
+            string path = Path.Combine("C:", "Users", "OnOff-09092023", "source", "repos", "ConsoleApp4", "ConsoleApp4", "posts.json");
+            //Environment.CurrentDirectory
+            //string path = Path.Combine(Environment.CurrentDirectory, "index.json");
+            using (StreamWriter sw = new StreamWriter(path))
+            {
+                sw.WriteLine(JsonConvert.SerializeObject(postslist, Formatting.Indented));
+            }
+        }
+
+        
+
+        static public void PReadList()
+        {
+            string path = Path.Combine("C:", "Users", "OnOff-09092023", "source", "repos", "ConsoleApp4", "ConsoleApp4", "posts.json");
+            using (StreamReader sr = new StreamReader(path))
+            {
+                List<Post> list2 = JsonConvert.DeserializeObject<List<Post>>(sr.ReadToEnd());
+                postslist = list2;
+                foreach (var i in postslist)
+                {
+                    if (!i.IsDeleted)
+                    {
+                        Console.WriteLine($"Post ID: {i.GetId()} \nUser's ID: {i.UserId} \nPost title: {i.Title} \nPost: {i.Body}");
+                    }
+                }
+
+            }
+            PostsAmount = postslist.Count == 0 ? 1 : postslist.Max(p => p.GetId()) + 1;
+        }
+
         static public void PostMenu()
         {
+            opl:
             Console.Clear();
             Console.WriteLine("Welcome to the Post Menu!");
             Console.WriteLine("Choose an option: \n");
             Console.WriteLine("1) Create new post");
             Console.WriteLine("2) Delete post");
-            Console.WriteLine("3) Read post");
-            Console.WriteLine("4) Update post");
-            Console.WriteLine("5) Delete post");
+            Console.WriteLine("3) Show all posts");
+            Console.WriteLine("4) Show user's posts");
+            Console.WriteLine("5) Read post");
+            Console.WriteLine("6) Update post");
+            Console.WriteLine("7) Exit");
             Console.Write("Enter a numbere of option: ");
-            string Uchoice = Console.ReadLine();
+            string Pchoice = Console.ReadLine();
+
+            switch(Pchoice)
+            {
+                case "1":
+ototto:
+                        Console.Clear();
+tuuuuuu:
+                        Console.Write("Enter user's ID: ");
+                    try
+                    {
+                        int userid = Convert.ToInt32(Console.ReadLine());
+                        Person.CheckActivity();
+                        if(Person.ActiveIDs.Contains(userid))
+                        {
+                             Console.Write("Enter post title: ");
+                             string title = Console.ReadLine();
+                             Console.Write("Enter post body: ");
+                             string body = Console.ReadLine();
+                             Post newPost = new Post(userid, title, body);
+                             //Person newPerson = new Person(name, username, email, phonenumber, website);
+                             postslist.Add(newPost);
+                             PWriteDown();
+                             Console.WriteLine("Post sucessfuly added!");
+                             break;
+                        }
+                        else
+                        {
+                             Console.WriteLine("There no such a user!");
+                             goto tuuuuuu;
+                        }
+                        
+                    }
+
+                    catch
+                    {
+                        goto ototto;
+                    }
+                    
+                    
+                case "2":
+wr:
+                    Console.Clear();
+ag:
+                    Console.Write("Enter ID of the post you want to delete or write '0' if you want to exit: ");
+                    try
+                    {
+                        int IdOfDeleatingPost = Convert.ToInt32(Console.ReadLine());
+                        if (IdOfDeleatingPost == 0)
+                        {
+                            goto opl;
+                        }
+                        for (int i = 0; i < postslist.Count; i++)
+                        {
+                            if (postslist[i].GetId() == IdOfDeleatingPost)
+                            {
+                                postslist[i].IsDeleted = true;
+                                PWriteDown();
+                                Console.WriteLine("Post deleted sucesfully");
+                                goto ag;
+
+                            }
+                        }
+                        Console.WriteLine("There is no post with such ID");
+                        goto ag;
+                    }
+
+                    catch
+                    {
+                        goto wr;
+                    }
+                case "3":
+                    Console.Clear();
+                    PReadList();
+                    break;
+
+                case "4":
+                    uyyyu:
+                    Console.Clear();
+                    resr:
+                    Console.Write("Enter ID of the user or enter '0' if you want to exit: ");
+                    try
+                    {
+                        int IdOfChoosedUser = Convert.ToInt32(Console.ReadLine());
+                        if(IdOfChoosedUser == 0)
+                        {
+                            PostMenu();
+                        }
+                        string path = Path.Combine("C:", "Users", "OnOff-09092023", "source", "repos", "ConsoleApp4", "ConsoleApp4", "posts.json");
+                        using (StreamReader sr = new StreamReader(path))
+                        {
+                            List<Post> list2 = JsonConvert.DeserializeObject<List<Post>>(sr.ReadToEnd());
+                            postslist = list2;
+                            foreach (var i in postslist)
+                            {
+                                if (!i.IsDeleted && i.UserId == IdOfChoosedUser)
+                                {
+                                    Console.WriteLine($"Post ID: {i.GetId()} \nUser's ID: {i.UserId} \nPost title: {i.Title} \nPost: {i.Body}");
+                                }
+                            }
+                            
+                            goto resr;
+
+                        }
+                    }
+                    catch
+                    {
+                        goto uyyyu;
+                    }
+                    
+                case "7":
+                    Program.MainMenu(); 
+                    break;
+            }
         }
+    }
+}
     }
 }
