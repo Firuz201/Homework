@@ -1,0 +1,82 @@
+.Title {
+    background-color: crimson;
+    display: flex;
+    flex-direction: row; 
+    align-items: center;
+    justify-content: center; 
+    height: 150px;
+    position: relative;
+}
+
+.Text {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
+
+.logo-image {
+    display: flex;
+    flex-direction: row; 
+    align-items: center;
+}
+.logo-image img {
+    width: 70px;
+    height: 70px;
+    margin-top: 15px;
+    margin-right: 5px;
+}
+.Title h1 {
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 48px;
+    margin: 20px 0 0 0;
+}
+
+.Title h3 {
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    margin: 0;
+    margin-left: -20px;
+}
+
+.left-images {
+    position:absolute;
+    left: 100px;      
+    display: flex;
+    gap: 10px;
+    
+}
+
+.left-images img {
+    width: 30px;
+    height: 30px;
+    transition: transform 0.2s ease;
+}
+
+.left-images img:hover {
+    transform: scale(1.25); 
+}
+
+.navbar {
+    display: flex;           /* Располагает ссылки в ряд */
+    gap: 60px;               /* Расстояние между ссылками */
+    padding: 10px 20px;      /* Отступы вокруг */
+    background-color: #fff;  /* Можно изменить фон */
+     font-weight: bold;
+      margin-left: 14%;
+}
+
+/* Стили для ссылок */
+.navbar a {
+    color: #000;              /* Черный цвет текста */
+    text-decoration: none;     /* Убираем подчеркивание */
+    font-size: 18px;           /* Размер шрифта */
+    font-family: 'Arial', 'Helvetica', sans-serif;  /* Красивый шрифт */
+    transition: text-decoration 0.3s; /* Плавное появление подчеркивания */
+}
+
+/* Подчеркивание при наведении */
+.navbar a:hover {
+    text-decoration: underline;
+}
