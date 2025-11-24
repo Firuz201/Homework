@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=\, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="SiteStyle.css">
+</head>
+<body>
+    <div class = "Title">
+        <div class = "Text">
+            <div class="logo-image">
+                <img src="Icons/channels4_profile.jpg" alt="Teleqraf Logo">
+                <h1>teleqraf</h1>
+            </div>
+            
+            <h3>INFORMASIYA AGENTLIYI</h3>
+        </div>
+        
+
+        <div class="left-images">
+            <img src="Icons/Facebook_Icon.png" alt="Facebook">
+            <img src="Icons/Instagram_Icon.png" alt="Instagram">
+            <img src="Icons/YouTube_Icon.png" alt="YouTube">
+            <img src="Icons/Telegram_Icon.png" alt="Telegram">
+            <img src="Icons/Tiktok_Icon.png" alt="TikTok">          
+        </div>
+    </div>
+
+    <div class="navbar">
+        <a href="#home">Bütün xəbərlər</a>
+        <a href="#siyasət">Siyasət</a>
+        <a href="#iqtisadiyyat">İqtisadiyyat</a>
+        <a href="#toplum">Toplum</a>
+        <a href="#dünya">Dünya</a>
+        <a href="#hadisə">Hadisə</a>
+        <a href="#mədəniyyət">Mədəniyyət</a>
+        <a href="#idman">İdman</a>
+        <a href="#analitika">Analitika</a>
+        <a href="#multimedia">Multimedia</a>
+    </div>
+
+
+</body>
+</html>
