@@ -1,0 +1,86 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Bank.Models;
+using Microsoft.Data.SqlClient;
+
+namespace Bank.Services
+{
+    public class CardTypeService
+    {
+        public string Create(string name)
+        {
+            using SqlConnection _connection = new SqlConnection(ConnectionStrings.ConnectionString);
+            var query = "insert into CardTypes values (@name)";
+            SqlCommand command = new SqlCommand(query, _connection);
+            command.Parameters.AddWithValue("name", name);
+            _connection.Open();
+            var rows = command.ExecuteNonQuery();
+            if (rows <= 0) return "Creating failed";
+            return "Creayed successfully";
+        }
+
+        //public string Update(string name)
+        //{
+
+        //}
+
+        public string Delete(string Id)
+        {
+            using SqlConnection _connection = new SqlConnection(ConnectionStrings.ConnectionString);
+            var query = "DELETE FROM CardTypes WHERE Id = @Id";
+            SqlCommand command = new SqlCommand(query, _connection);
+            command.Parameters.AddWithValue("Id", Id);
+            _connection.Open();
+            var rows = command.ExecuteNonQuery();
+            if (rows <= 0) return "Deleating failed";
+            return "Deleted succesfully";
+
+
+        }
+
+        public List<CardType> GetAll(int page, int size)
+        {
+            using SqlConnection _connection = new SqlConnection(ConnectionStrings.ConnectionString);
+            var query = "Select * from CardTypes order by Id Offset (@page-1)*@size rows fetch next @size rows only";
+            SqlCommand command = new SqlCommand(query, _connection);
+            command.Parameters.AddWithValue("@page", page);
+            command.Parameters.AddWithValue("@size", size);
+            var adapter = new SqlDataAdapter(command);
+            DataSet data = new DataSet();
+            adapter.Fill(data);
+            var types = new List<CardType>();
+            foreach (DataRow item in data.Tables[0].Rows)
+            {
+                var type = new CardType()
+                {
+                    Id = (int)item["Id"],
+                    Name = item["Name"].ToString(),
+                };
+                types.Add(type);
+            }
+            return types;
+        }
+
+        public CardType GetByID(int Id)
+        {
+            using SqlConnection _connection = new SqlConnection(ConnectionStrings.ConnectionString);
+            var query = "Select * from CardTypes where Id = @Id ";
+            SqlCommand command = new SqlCommand(query, _connection);
+            command.Parameters.AddWithValue("Id", Id);
+            _connection.Open();
+            var rows = command.ExecuteReader();
+            rows.Read();
+            var type = new CardType()
+            {
+                Id = (int)rows["Id"],
+                Name = rows["Name"].ToString(),
+            };
+            return type;
+
+        }
+    }
+}
