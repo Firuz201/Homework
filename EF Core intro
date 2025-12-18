@@ -1,0 +1,218 @@
+using EFCoreInfo.Context;
+using Microsoft.EntityFrameworkCore;
+
+namespace EFCoreInfo
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            using AppDbContext context = new AppDbContext();
+
+            start:
+            Console.WriteLine("Welcome!");
+            Console.WriteLine("1. Create Department");
+            Console.WriteLine("2. Delete Department");
+            Console.WriteLine("3. Show Departments");
+            Console.WriteLine("4. Create Employee");
+            Console.WriteLine("5. Delete Employee");
+            Console.WriteLine("6. Show Employees");
+
+            string input = Console.ReadLine();
+
+            Console.Clear();
+            switch (input)
+            {
+                case "1":
+                    Console.WriteLine("Enter department name:");
+                    string depName = Console.ReadLine();
+
+                    Console.WriteLine("Enter capacity:");
+                    bool isParsed = int.TryParse(Console.ReadLine(), out int capacity);
+
+                    if (!isParsed || capacity <= 0)
+                    {
+                        Console.WriteLine("Invalid capacity");
+                        break;
+                    }
+
+                    Department department = new()
+                    {
+                        Name = depName,
+                        Capacity = capacity
+                    };
+
+                    context.Departments.Add(department);
+                    context.SaveChanges();
+
+                    Console.WriteLine("Department created successfully");
+                break;
+
+
+                case "2":
+                    var allDepartments = context.Departments
+                        .Include(d => d.Employees)
+                        .ToList();
+
+                    if (!allDepartments.Any())
+                    {
+                        Console.WriteLine("No departments found");
+                        break;
+                    }
+
+                    allDepartments.ForEach(d => Console.WriteLine(d));
+
+                    Console.WriteLine("Enter department ID to delete:");
+                    bool isParsedDepartmentId = int.TryParse(Console.ReadLine(), out int departmentIdToDelete);
+
+                    if (!isParsedDepartmentId)
+                    {
+                        Console.WriteLine("Invalid ID");
+                        break;
+                    }
+
+                    Department departmentToDelete = allDepartments
+                        .FirstOrDefault(d => d.Id == departmentIdToDelete);
+
+                    if (departmentToDelete == null)
+                    {
+                        Console.WriteLine("Department not found");
+                        break;
+                    }
+
+                    if (departmentToDelete.Employees.Any())
+                    {
+                        Console.WriteLine("Cannot delete department with employees");
+                        break;
+                    }
+
+                    context.Departments.Remove(departmentToDelete);
+                    context.SaveChanges();
+
+                    Console.WriteLine("Department deleted successfully");
+                    break;
+
+
+
+                case "3":
+                    var deps = context.Departments
+                        .Include(d => d.Employees)
+                        .ToList();
+
+                    deps.ForEach(d => Console.WriteLine(d));
+                break;
+
+
+                case "4":
+nameInput:
+                    Console.WriteLine("Enter name: ");
+                    string name = Console.ReadLine();
+                    if (name == null)
+                    {
+                        Console.WriteLine("Write a name!");
+                        goto nameInput;
+                    }
+salaryInput:
+                    Console.WriteLine("Enter salary: ");
+                    string salaryInput = Console.ReadLine();
+                    var isParseDecimal = decimal.TryParse(salaryInput , out decimal salary);
+
+                    if (!isParseDecimal)
+                    {
+                        Console.WriteLine("Write an amount!");
+                        goto salaryInput;
+                    }
+
+                    if (salary <= 0)
+                    {
+                        Console.WriteLine("Incorrect input. Try again");
+                        goto salaryInput;
+                    }
+
+                    var departments = context.Departments.Include(d => d.Employees).ToList();
+                    departments.ForEach(de => Console.WriteLine(de));
+
+departmentIdInput:
+                    Console.WriteLine("Choose id of the department you want add employee to: ");
+                    string departmentIdInput = Console.ReadLine();
+                    var isParseDepartmentId = int.TryParse(departmentIdInput, out int departmentId);
+
+                    var selectedDepartment = departments.First(d => d.Id == departmentId);
+
+                    if (selectedDepartment.Employees.Count >= selectedDepartment.Capacity)
+                    {
+                        Console.WriteLine("This department is already full!");
+                        break;
+                    }
+
+                    if (!isParseDepartmentId)
+                    {
+                        Console.WriteLine("Write right id!");
+                        goto departmentIdInput;
+                    }
+
+                    var isExistDepartment = departments.Any(x=>x.Id==departmentId);
+
+                    if(!isExistDepartment)
+                    {
+                        Console.WriteLine("Such department isn't exists");
+                        goto departmentIdInput;
+                    }
+
+                    Employee employee = new()
+                    {
+                        Name = name,
+                        Salary = salary,
+                        DepartmentId = departmentId
+                    };
+
+                    context.Employees.Add(employee);
+                    context.SaveChanges();
+
+                    Console.WriteLine("Employee added successfully");
+
+                break;
+
+                case "5":
+                    PrintAllEmployees(context);
+choosingIdOfDeletion:
+                    Console.WriteLine("Write ID of the employee you want to delete");
+                    string idInput = Console.ReadLine();
+                    var isParseId = int.TryParse(idInput, out int id);
+
+                    if (!isParseId)
+                    {
+                        Console.WriteLine("Try again!");
+                        goto choosingIdOfDeletion;
+                    }
+
+                    Employee deletedEmployee = context.Employees.FirstOrDefault(x=>x.Id==id);
+                    if (deletedEmployee == null)
+                    {
+                        Console.WriteLine("Employee you want to delete is not found");
+                        break;
+                    }
+
+                    context.Employees.Remove(deletedEmployee);
+                    context.SaveChanges();
+
+                    Console.WriteLine("EEmployee is deleted successfully");
+
+                    break;
+
+                case "6":
+                    PrintAllEmployees(context);
+                break;
+            }
+
+            Console.WriteLine();
+            goto start;
+        }
+
+        private static void PrintAllEmployees(AppDbContext context)
+        {
+            var employees = context.Employees.Include(x => x.Department).ToList();
+            employees.ForEach(e => Console.WriteLine(e));
+        }
+    }
+}
